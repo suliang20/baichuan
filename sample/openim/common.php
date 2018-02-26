@@ -12,7 +12,15 @@ if (!ini_get('display_errors')) {
 }
 error_reporting(E_ALL);
 
-require '../../local/config.php';
+defined('ROOT') or define('ROOT', realpath(dirname(dirname(dirname(__FILE__)))) . '/');
+defined('CONFIG_FILE') or define('CONFIG_FILE', ROOT . 'config/config.php');
+defined('CONFIG_LOCAL_FILE') or define('CONFIG_LOCAL_FILE', ROOT . '/config/config-local.php');
+
+if(file_exists(CONFIG_LOCAL_FILE)){
+    require_once(CONFIG_LOCAL_FILE);
+}else{
+    require_once(CONFIG_FILE);
+}
 require '../../vendor/autoload.php';
 
 $openIm = new \baichuan\OpenIm();

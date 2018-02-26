@@ -13,8 +13,8 @@ use baichuan\data\Data;
 
 class ImUser extends Data
 {
-    public static $logFile = ROOT . '/data/im-user.log';
-    public static $userLastIdLogFile = ROOT . '/data/user-last-id.log';
+    public static $logFile = ROOT . 'data/openim/im-user.log';
+    public static $userLastIdLogFile = ROOT . 'data/openim/user-last-id.log';
 
     /**
      * 用户添加
@@ -34,8 +34,8 @@ class ImUser extends Data
                 $datas = file_get_contents(static::$logFile);
                 $datas = unserialize($datas);
             } else {
-                if (!touch(static::$logFile)) {
-                    throw new BaiChuanException('添加用户');
+                if (!$this->createFile(static::$logFile)) {
+                    throw new BaiChuanException('创建用户文件失败');
                 }
                 $datas = [];
             }
@@ -129,8 +129,8 @@ class ImUser extends Data
                     $newUserId = $lastUserId + 1;
                 }
             } else {
-                if (!touch(static::$userLastIdLogFile)) {
-                    throw new BaiChuanException('获取新用户ID失败');
+                if (!$this->createFile(static::$userLastIdLogFile)) {
+                    throw new BaiChuanException('创建最后用户ID文件失败');
                 }
                 $newUserId = 1000;
             }
