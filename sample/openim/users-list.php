@@ -86,6 +86,7 @@ require_once OPEN_IM_PROJECT . "common-link.php";
                             <a href="user-im.php?userid=<?= $item['userid'] ?>">聊天</a>
                             <a href="custmsg-push.php?userid=<?= $item['userid'] ?>">发送自定义消息</a>
                             <a href="immsg-push.php?userid=<?= $item['userid'] ?>">发送标准消息</a>
+                            <a href="relations-get.php?userid=<?= $item['userid'] ?>">获取聊天对象</a>
                         <?php elseif ($item['status'] == 2): ?>
                             <a href="user-active.php?userid=<?= $item['userid'] ?>">重新添加</a>
                         <?php endif; ?>

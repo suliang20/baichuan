@@ -422,7 +422,7 @@ class OpenIm extends \baichuan\data\Data
                 $immsg->context = $immsgArr['context'];
             }
             if (!empty($immsgArr['media_attr'])) {
-                $immsg->media_attr= $immsgArr['apns_param'];
+                $immsg->media_attr = $immsgArr['apns_param'];
             }
             $immsg->from_taobao = "0";
             $req->setImmsg(json_encode($immsg));
@@ -438,6 +438,72 @@ class OpenIm extends \baichuan\data\Data
             }
             return $return;
         } catch (BaiChuanException $e) {
+            $this->addError(__FUNCTION__, $e->getMessage(), $e->getLine(), $e->getFile());
+            return false;
+        }
+    }
+
+    /**
+     * 获取openim帐号的聊天关系
+     * @param $begDate
+     * @param $endDate
+     * @param $userInfo
+     * @return bool|mixed
+     */
+    public function RelationsGet($begDate, $endDate, $userInfo)
+    {
+        try {
+            $topClient = $this->getTopClient($this->format);
+
+
+            $req = new \OpenimRelationsGetRequest();
+            //  查询起始日期
+            $newTime = strtotime(date('Y-m-d'));
+            if (empty($begDate) || date('Ymd', strtotime($begDate)) != $begDate) {
+                throw new  BaiChuanException('查询起始日期错误');
+            }
+            $begTime = strtotime($begDate);
+            if ($newTime - $begTime >= 3600 * 24 * 30) {
+                throw new BaiChuanException('查询起始日期不能大于一个月');
+            }
+            $req->setBegDate($begDate);
+            //  查询结束日期
+            if (empty($endDate) || date('Ymd', strtotime($endDate)) != $endDate) {
+                throw new  BaiChuanException('查询结束日期错误');
+            }
+            $endTime = strtotime($endDate);
+            if ($newTime - $endTime >= 3600 * 24 * 30) {
+                throw new BaiChuanException('查询结束日期不能大于一个月');
+            }
+            if ($endTime < $begTime) {
+                throw new BaiChuanException('查询结束日期不能大于查询起始时期');
+            }
+            $req->setEndDate($endDate);
+
+            $user = new \OpenImUser();
+            if (empty($userInfo['uid'])) {
+                throw new BaiChuanException('查询用户ID不能为空');
+            }
+            $user->uid = $userInfo['uid'];
+
+            $user->taobao_account = !empty($userInfo['taobao_account']) && $userInfo['taobao_account'] == true ? 'true' : "false";
+            if(!empty($userInfo['app_key'])){
+                $user->app_key = $userInfo['app_key'];
+            }
+            $req->setUser(json_encode($user));
+
+            $resp = $topClient->execute($req);
+            $return = $this->toArray($resp, $this->format);
+            if (!$return) {
+                throw new BaiChuanException($this->errors[0]['errorMsg']);
+            }
+            if (!empty($return['code'])) {
+                $this->ResponseError($return);
+                throw new BaiChuanException($return['msg']);
+            }
+            return $return;
+        } catch
+        (BaiChuanException $e) {
             $this->addError(__FUNCTION__, $e->getMessage(), $e->getLine(), $e->getFile());
             return false;
         }
