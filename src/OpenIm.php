@@ -373,10 +373,59 @@ class OpenIm extends \baichuan\data\Data
             }
             $custmsg->invisible = !empty($custmsgArr['invisible']) ? "1" : "0";
             if (!empty($custmsgArr['from_nick'])) {
-                $custmsg->from_nick= $custmsgArr['from_nick'];
+                $custmsg->from_nick = $custmsgArr['from_nick'];
             }
             $custmsg->from_taobao = "0";
             $req->setCustmsg(json_encode($custmsg));
+
+            $resp = $topClient->execute($req);
+            $return = $this->toArray($resp, $this->format);
+            if (!$return) {
+                throw new BaiChuanException($this->errors[0]['errorMsg']);
+            }
+            if (!empty($return['code'])) {
+                $this->ResponseError($return);
+                throw new BaiChuanException($return['msg']);
+            }
+            return $return;
+        } catch (BaiChuanException $e) {
+            $this->addError(__FUNCTION__, $e->getMessage(), $e->getLine(), $e->getFile());
+            return false;
+        }
+    }
+
+    /**
+     * openim标准消息改善
+     * @param $immsgArr
+     * @return bool|mixed
+     */
+    public function ImmsgPush($immsgArr)
+    {
+        try {
+            $topClient = $this->getTopClient($this->format);
+
+            $req = new \OpenimImmsgPushRequest();
+            $immsg = new \ImMsg();
+            if (empty($immsgArr['from_user'])) {
+                throw new BaiChuanException('发送方userid不能为空');
+            }
+            $immsg->from_user = $immsgArr['from_user'];
+            $immsg->to_appkey = !empty($immsgArr['to_appkey']) ? $immsgArr['to_appkey'] : '0';
+            if (empty($immsgArr['to_users'])) {
+                throw new BaiChuanException('接收方不能为空');
+            }
+            $immsg->to_users = $immsgArr['to_users'];
+            if (!empty($immsgArr['msg_type'])) {
+                $immsg->msg_type = $immsgArr['msg_type'];
+            }
+            if (!empty($immsgArr['context'])) {
+                $immsg->context = $immsgArr['context'];
+            }
+            if (!empty($immsgArr['media_attr'])) {
+                $immsg->media_attr= $immsgArr['apns_param'];
+            }
+            $immsg->from_taobao = "0";
+            $req->setImmsg(json_encode($immsg));
 
             $resp = $topClient->execute($req);
             $return = $this->toArray($resp, $this->format);
