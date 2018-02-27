@@ -145,7 +145,7 @@ class OpenIm extends \baichuan\data\Data
                 }
                 //  扩展字段
                 if (!empty($userinfo['extra'])) {
-                    $userinfos->extra = $userinfo['extra'];
+                    $userinfos->extra = json_encode($userinfo['extra'], JSON_UNESCAPED_UNICODE);
                 }
                 //  职位
                 if (!empty($userinfo['career'])) {
@@ -153,7 +153,7 @@ class OpenIm extends \baichuan\data\Data
                 }
                 //  vip
                 if (!empty($userinfo['vip'])) {
-                    $userinfos->vip = $userinfo['vip'];
+                    $userinfos->vip = json_encode($userinfo['vip'], JSON_UNESCAPED_UNICODE);
                 }
                 //  地址
                 if (!empty($userinfo['address'])) {
@@ -244,7 +244,7 @@ class OpenIm extends \baichuan\data\Data
                 if (empty($userinfo['userid'])) {
                     throw new BaiChuanException('im用户名不能为空');
                 }
-                $userinfos->userid= $userinfo['userid'];
+                $userinfos->userid = $userinfo['userid'];
                 //  IM密码
                 if (empty($userinfo['password'])) {
                     throw new BaiChuanException('im密码未设置');
@@ -276,7 +276,7 @@ class OpenIm extends \baichuan\data\Data
                 }
                 //  扩展字段
                 if (!empty($userinfo['extra'])) {
-                    $userinfos->extra = $userinfo['extra'];
+                    $userinfos->extra = json_encode($userinfo['extra'], JSON_UNESCAPED_UNICODE);
                 }
                 //  职位
                 if (!empty($userinfo['career'])) {
@@ -284,7 +284,7 @@ class OpenIm extends \baichuan\data\Data
                 }
                 //  vip
                 if (!empty($userinfo['vip'])) {
-                    $userinfos->vip = $userinfo['vip'];
+                    $userinfos->vip = json_encode($userinfo['vip'], JSON_UNESCAPED_UNICODE);
                 }
                 //  地址
                 if (!empty($userinfo['address'])) {

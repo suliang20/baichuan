@@ -23,6 +23,18 @@ if(file_exists(CONFIG_LOCAL_FILE)){
 }
 require '../../vendor/autoload.php';
 
+//  判断是否post提交
+function is_post()
+{
+    return $_SERVER['REQUEST_METHOD'] == 'POST' ? true : false;
+}
+
+//  判断是否post提交
+function is_get()
+{
+    return $_SERVER['REQUEST_METHOD'] == 'get' ? true : false;
+}
+
 $openIm = new \baichuan\OpenIm();
 $openIm->appkey = APPKEY;
 $openIm->secret = SECRET;

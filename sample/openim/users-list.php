@@ -110,7 +110,7 @@ require_once "common-link.php";
 
 
                     <td>
-                        <a href="user-edit.php?userid=<?= $item['userid'] ?>">编辑</a>
+                        <a href="user-update.php?userid=<?= $item['userid'] ?>">编辑</a>
                     </td>
                 </tr>
             <?php endif; ?>

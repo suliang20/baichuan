@@ -8,17 +8,46 @@
 
 require_once 'common.php';
 
-
-try {
-    if (empty($_GET['userid'])) {
-        throw new \Exception('用户ID不存在');
+$imUser = new \baichuan\business\ImUser();
+if (!is_post()) {
+    try {
+        if (empty($_GET['userid'])) {
+            throw new \Exception('用户ID不存在');
+        }
+        $userid = $_GET['userid'];
+        $userinfo = $imUser->getUserInfoByUserid($userid);
+    } catch (\Exception $e) {
+        echo $e->getMessage();
     }
-    $userid = $_GET['userid'];
-    $userinfo = (new \baichuan\business\ImUser())->getUserInfoByUserid($userid);
-
-
-} catch (\Exception $e) {
-    echo $e->getMessage();
+//    var_dump($userinfo);exit;
+} else {
+    $result = [
+        'error' => 0,
+        'msg' => '提交错误',
+    ];
+    try {
+        if (empty($_POST['userid'])) {
+            throw new \Exception('数据错误');
+        }
+        $return = $openIm->usersUpdate([$_POST]);
+        if (!$return) {
+            throw new \Exception($openIm->errors[0]['errorMsg']);
+        }
+        if (empty($return['uid_succ']['string'])) {
+            foreach ($return['uid_fail']['string'] as $uid_key => $uid) {
+                throw new \Exception($return['fail_msg']['string'][$uid_key]);
+            }
+        }
+        if (!$imUser->update($_POST, $_SERVER['REQUEST_TIME'])) {
+            throw new \Exception($imUser->errors[0]['errorMsg']);
+        }
+        $result['error'] = 1;
+        $result['msg'] = '更新成功';
+    } catch (\Exception $e) {
+        $result['msg'] = $e->getMessage();
+    }
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    exit;
 }
 ?>
 
@@ -36,7 +65,7 @@ require_once "common-link.php";
 ?>
 <p><a href="register.php">注册</a></p>
 <div>
-    <form id="openImForm" name="openImForm">
+    <form action="" id="BaiChuanForm" name="BaiChuanForm">
         <div>
             <div>
                 <label for="userid">用户ID:</label>
@@ -61,7 +90,7 @@ require_once "common-link.php";
             </div>
             <div>
                 <label for="mobile">手机号码:</label>
-                <input type="text" id="mobile" name="nick" value="<?= $userinfo['mobile'] ?>">
+                <input type="text" id="mobile" name="mobile" value="<?= $userinfo['mobile'] ?>">
             </div>
             <div>
                 <label for="taobaoid">淘宝账号:</label>
@@ -120,8 +149,8 @@ require_once "common-link.php";
                 <input type="text" id="createTime" name="createTime" value="<?= $userinfo['createTime'] ?>"
                        readonly="readonly">
             </div>
-            <button type="button" id="OpenImSumbit">提交编辑</button>
         </div>
+        <button type="button" id="BaiChuanSumbit" baichuan-ajax-handler="">提交编辑</button>
     </form>
 </div>
 </body>
