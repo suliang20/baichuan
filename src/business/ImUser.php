@@ -134,7 +134,7 @@ class ImUser extends Data
     }
 
     /**
-     * 用户更新
+     * 用户激活
      * @param $data
      * @param $time
      * @return bool

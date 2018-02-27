@@ -40,7 +40,7 @@ class OpenIm extends \baichuan\data\Data
                 $this->ResponseError($return);
                 throw new BaiChuanException($return['msg']);
             }
-            return $return['userinfos'];
+            return $return['userinfos']['userinfos'];
         } catch (BaiChuanException $e) {
             $this->addError(__FUNCTION__, $e->getMessage(), $e->getLine(), $e->getFile());
             return false;
@@ -145,7 +145,7 @@ class OpenIm extends \baichuan\data\Data
                 }
                 //  扩展字段
                 if (!empty($userinfo['extra'])) {
-                    $userinfos->extra = json_encode($userinfo['extra'], JSON_UNESCAPED_UNICODE);
+                    $userinfos->extra = $userinfo['extra'];
                 }
                 //  职位
                 if (!empty($userinfo['career'])) {
@@ -153,7 +153,7 @@ class OpenIm extends \baichuan\data\Data
                 }
                 //  vip
                 if (!empty($userinfo['vip'])) {
-                    $userinfos->vip = json_encode($userinfo['vip'], JSON_UNESCAPED_UNICODE);
+                    $userinfos->vip = $userinfo['vip'];
                 }
                 //  地址
                 if (!empty($userinfo['address'])) {

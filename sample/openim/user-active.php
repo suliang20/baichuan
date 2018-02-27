@@ -62,7 +62,7 @@ if (!is_post()) {
 
 <html>
 <head>
-    <title>用户更新</title>
+    <title>用户激活</title>
     <?php
     require_once "common-js-style.php";
     ?>

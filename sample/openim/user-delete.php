@@ -56,7 +56,7 @@ if (!is_post()) {
 
 <html>
 <head>
-    <title>用户编辑</title>
+    <title>用户删除</title>
     <?php
     require_once "common-js-style.php";
     ?>
@@ -66,7 +66,6 @@ if (!is_post()) {
 <?php
 require_once "common-link.php";
 ?>
-<p><a href="user-add.php">用户删除</a></p>
 <div>
     <form action="" id="BaiChuanForm" name="BaiChuanForm">
         <div>

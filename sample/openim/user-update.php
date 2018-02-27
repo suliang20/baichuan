@@ -71,7 +71,6 @@ if (!is_post()) {
 <?php
 require_once "common-link.php";
 ?>
-<p><a href="user-add.php">添加</a></p>
 <div>
     <form action="" id="BaiChuanForm" name="BaiChuanForm">
         <div>
