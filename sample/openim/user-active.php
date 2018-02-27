@@ -34,10 +34,11 @@ if (!is_post()) {
             throw new \Exception('用户不存在');
         }
         //  检查用户是否删除
-        if($imUser->hasUserDelete($_POST['userid'])){
-            throw new \Exception('用户已删除');
+        if(!$imUser->hasUserDelete($_POST['userid'])){
+            throw new \Exception('用户未删除');
         }
-        $return = $openIm->usersUpdate([$_POST]);
+        $_POST['password'] = md5($_POST['userid']);
+        $return = $openIm->usersAdd([$_POST]);
         if (!$return) {
             throw new \Exception($openIm->errors[0]['errorMsg']);
         }
@@ -46,7 +47,7 @@ if (!is_post()) {
                 throw new \Exception($return['fail_msg']['string'][$uid_key]);
             }
         }
-        if (!$imUser->update($_POST, $_SERVER['REQUEST_TIME'])) {
+        if (!$imUser->active($_POST, $_SERVER['REQUEST_TIME'])) {
             throw new \Exception($imUser->errors[0]['errorMsg']);
         }
         $result['error'] = 1;
@@ -152,8 +153,13 @@ require_once "common-link.php";
                 <input type="text" id="createTime" name="createTime" value="<?= $userinfo['createTime'] ?>"
                        readonly="readonly">
             </div>
+            <div>
+                <label for="updateTime">更新时间:</label>
+                <input type="text" id="updateTime" name="updateTime" value="<?= $userinfo['updateTime'] ?>"
+                       readonly="readonly">
+            </div>
         </div>
-        <button type="button" id="BaiChuanSumbit" baichuan-ajax-handler="" baichuan-ajax-redirect="">提交编辑</button>
+        <button type="button" id="BaiChuanSumbit" baichuan-ajax-handler="" baichuan-ajax-redirect="">提交激活</button>
     </form>
 </div>
 </body>

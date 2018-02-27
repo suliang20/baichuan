@@ -48,6 +48,7 @@ require_once "common-link.php";
 
             <th>状态</th>
             <th>创建时间</th>
+            <th>更新时间</th>
 
             <th>操作</th>
         </tr>
@@ -75,13 +76,14 @@ require_once "common-link.php";
                     <td><?= $item['weibo'] ?></td>
 
                     <td><?= $item['status'] ?></td>
-                    <td><?= $item['createTime'] ?></td>
-
-
+                    <td><?= !empty($item['createTime']) ? date('Y-m-d H:i:s', $item['createTime']) : '--' ?></td>
+                    <td><?= !empty($item['updateTime']) ? date('Y-m-d H:i:s', $item['updateTime']) : '--' ?></td>
                     <td>
-                        <a href="user-update.php?userid=<?= $item['userid'] ?>">更新</a>
                         <?php if ($item['status'] == 1): ?>
+                            <a href="user-update.php?userid=<?= $item['userid'] ?>">更新</a>
                             <a href="user-delete.php?userid=<?= $item['userid'] ?>">删除</a>
+                        <?php elseif ($item['status'] == 2): ?>
+                            <a href="user-active.php?userid=<?= $item['userid'] ?>">重新添加</a>
                         <?php endif; ?>
                     </td>
                 </tr>

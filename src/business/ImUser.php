@@ -134,6 +134,64 @@ class ImUser extends Data
     }
 
     /**
+     * 用户更新
+     * @param $data
+     * @param $time
+     * @return bool
+     */
+    public function active($data, $time)
+    {
+        try {
+            if (empty($data['userid'])) {
+                throw new BaiChuanException('用户ID不存在');
+            }
+            $userid = $data['userid'];
+            if (file_exists(static::$logFile)) {
+                $datas = file_get_contents(static::$logFile);
+                $datas = unserialize($datas);
+            } else {
+                if (!$this->createFile(static::$logFile)) {
+                    throw new BaiChuanException('创建用户文件失败');
+                }
+                $datas = [];
+            }
+            if (empty($datas[$userid])) {
+                throw new BaiChuanException('用户不存在');
+            }
+            $userInfo = $datas[$userid];
+            //  用户ID
+            $userInfo['password'] = !empty($data['password']) ? $data['password'] : $userInfo['password'];
+            //  昵称
+            $userInfo['nick'] = !empty($data['nick']) ? $data['nick'] : $userInfo['nick'];
+            $userInfo['icon_url'] = !empty($data['icon_url']) ? $data['icon_url'] : $userInfo['icon_url'];
+            $userInfo['email'] = !empty($data['email']) ? $data['email'] : $userInfo['email'];
+            $userInfo['mobile'] = !empty($data['mobile']) ? $data['mobile'] : $userInfo['mobile'];
+            $userInfo['taobaoid'] = !empty($data['taobaoid']) ? $data['taobaoid'] : $userInfo['taobaoid'];
+            $userInfo['remark'] = !empty($data['remark']) ? $data['remark'] : $userInfo['remark'];
+            $userInfo['extra'] = !empty($data['extra']) ? $data['extra'] : $userInfo['extra'];
+            $userInfo['career'] = !empty($data['career']) ? $data['career'] : $userInfo['career'];
+            $userInfo['vip'] = !empty($data['vip']) ? $data['vip'] : $userInfo['vip'];
+            $userInfo['address'] = !empty($data['address']) ? $data['address'] : $userInfo['address'];
+            $userInfo['name'] = !empty($data['name']) ? $data['name'] : $userInfo['name'];
+            $userInfo['age'] = !empty($data['age']) ? $data['age'] : $userInfo['age'];
+            $userInfo['gender'] = !empty($data['gender']) ? $data['gender'] : $userInfo['gender'];
+            $userInfo['wechat'] = !empty($data['wechat']) ? $data['wechat'] : $userInfo['wechat'];
+            $userInfo['qq'] = !empty($data['qq']) ? $data['qq'] : $userInfo['qq'];
+            $userInfo['weibo'] = !empty($data['weiboupdate']) ? $data['weibo'] : $userInfo['weibo'];
+            $userInfo['status'] = 1;
+            $userInfo['updateTime'] = $time;
+            $datas[$userid] = $userInfo;
+            $datas = serialize($datas);
+            file_put_contents(static::$logFile, $datas);
+            return true;
+        } catch (BaiChuanException $e) {
+            $this->addError(__FUNCTION__, $e->getMessage(), $e->getFile(), $e->getLine());
+        }
+
+        return false;
+    }
+
+    /**
      * 用户删除
      * @param $userid
      * @param $time
@@ -158,7 +216,7 @@ class ImUser extends Data
                 throw new BaiChuanException('用户不存在');
             }
             if ($datas[$userid]['status'] != 1) {
-               throw new BaiChuanException('删除状态异常');
+                throw new BaiChuanException('删除状态异常');
             }
 
             $userInfo = $datas[$userid];
@@ -212,6 +270,23 @@ class ImUser extends Data
     {
         $allUser = $this->getAll();
         return !empty($allUser[$userid]) ? $allUser[$userid] : false;
+    }
+
+    /**
+     * 用户已删除
+     * @param $userid
+     * @return bool
+     */
+    public function hasUserDelete($userid)
+    {
+        $allUser = $this->getAll();
+        if (empty($allUser[$userid])) {
+            return false;
+        }
+        if ($allUser[$userid]['status'] == 2) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -29,6 +29,14 @@ if (!is_post()) {
             throw new \Exception('数据错误');
         }
         $userid = $_POST['userid'];
+        //  检查用户是否存在
+        if(!$imUser->hasUserid($userid)){
+           throw new \Exception('用户不存在');
+        }
+        //  检查用户是否删除
+        if($imUser->hasUserDelete($userid)){
+            throw new \Exception('删除用户已删除');
+        }
         $return = $openIm->usersDelete($userid);
         if (!$return) {
             throw new \Exception($openIm->errors[0]['errorMsg']);
