@@ -336,6 +336,64 @@ class OpenIm extends \baichuan\data\Data
         }
     }
 
+    /**
+     * 推送自定义openim消息
+     * @param $custmsgArr
+     * @return bool|mixed
+     */
+    public function custmsgPush($custmsgArr)
+    {
+        try {
+            $topClient = $this->getTopClient($this->format);
+
+            $req = new \OpenimCustmsgPushRequest();
+            $custmsg = new \CustMsg();
+            if (empty($custmsgArr['from_user'])) {
+                throw new BaiChuanException('发送方userid不能为空');
+            }
+            $custmsg->from_user = $custmsgArr['from_user'];
+            $custmsg->to_appkey = !empty($custmsgArr['to_appkey']) ? $custmsgArr['to_appkey'] : '0';
+            if (empty($custmsgArr['to_users'])) {
+                throw new BaiChuanException('接收方不能为空');
+            }
+            $custmsg->to_users = $custmsgArr['to_users'];
+            if (empty($custmsgArr['summary'])) {
+                throw new BaiChuanException('消息摘要不能为空');
+            }
+            $custmsg->summary = $custmsgArr['summary'];
+            if (empty($custmsgArr['data'])) {
+                throw new BaiChuanException('发送数据不能为空');
+            }
+            $custmsg->data = $custmsgArr['data'];
+            if (!empty($custmsgArr['aps'])) {
+                $custmsg->aps = $custmsgArr['aps'];
+            }
+            if (!empty($custmsgArr['apns_param'])) {
+                $custmsg->apns_param = $custmsgArr['apns_param'];
+            }
+            $custmsg->invisible = !empty($custmsgArr['invisible']) ? "1" : "0";
+            if (!empty($custmsgArr['from_nick'])) {
+                $custmsg->from_nick= $custmsgArr['from_nick'];
+            }
+            $custmsg->from_taobao = "0";
+            $req->setCustmsg(json_encode($custmsg));
+
+            $resp = $topClient->execute($req);
+            $return = $this->toArray($resp, $this->format);
+            if (!$return) {
+                throw new BaiChuanException($this->errors[0]['errorMsg']);
+            }
+            if (!empty($return['code'])) {
+                $this->ResponseError($return);
+                throw new BaiChuanException($return['msg']);
+            }
+            return $return;
+        } catch (BaiChuanException $e) {
+            $this->addError(__FUNCTION__, $e->getMessage(), $e->getLine(), $e->getFile());
+            return false;
+        }
+    }
+
     public function test()
     {
         echo 'test', PHP_EOL;

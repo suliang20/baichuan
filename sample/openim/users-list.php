@@ -84,6 +84,7 @@ require_once OPEN_IM_PROJECT . "common-link.php";
                             <a href="user-delete.php?userid=<?= $item['userid'] ?>">删除</a>
                             <a href="user-syn.php?userid=<?= $item['userid'] ?>">用户同步</a>
                             <a href="user-im.php?userid=<?= $item['userid'] ?>">聊天</a>
+                            <a href="custmsg-push.php?userid=<?= $item['userid'] ?>">发送自定义消息</a>
                         <?php elseif ($item['status'] == 2): ?>
                             <a href="user-active.php?userid=<?= $item['userid'] ?>">重新添加</a>
                         <?php endif; ?>

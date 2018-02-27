@@ -42,7 +42,6 @@ require_once OPEN_IM_PROJECT . "common-link.php";
             <option value="<?= $key ?>"><?= $key ?></option>
         <?php endforeach; ?>
     </select>
-    <a href="<?= BASE_URL ?>openim/h5/im.php">开始聊天</a>
     <a href="javascript:;" onclick="submitIm()">开始聊天</a>
 </div>
 <script type="text/javascript">
