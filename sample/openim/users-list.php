@@ -80,6 +80,9 @@ require_once "common-link.php";
 
                     <td>
                         <a href="user-update.php?userid=<?= $item['userid'] ?>">更新</a>
+                        <?php if ($item['status'] == 1): ?>
+                            <a href="user-delete.php?userid=<?= $item['userid'] ?>">删除</a>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endif; ?>

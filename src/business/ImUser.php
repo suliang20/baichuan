@@ -133,6 +133,49 @@ class ImUser extends Data
         return false;
     }
 
+    /**
+     * 用户删除
+     * @param $userid
+     * @param $time
+     * @return bool
+     */
+    public function delete($userid, $time)
+    {
+        try {
+            if (empty($userid)) {
+                throw new BaiChuanException('用户ID不存在');
+            }
+            if (file_exists(static::$logFile)) {
+                $datas = file_get_contents(static::$logFile);
+                $datas = unserialize($datas);
+            } else {
+                if (!$this->createFile(static::$logFile)) {
+                    throw new BaiChuanException('创建用户文件失败');
+                }
+                $datas = [];
+            }
+            if (empty($datas[$userid])) {
+                throw new BaiChuanException('用户不存在');
+            }
+            if ($datas[$userid]['status'] != 1) {
+               throw new BaiChuanException('删除状态异常');
+            }
+
+            $userInfo = $datas[$userid];
+
+            $userInfo['updateTime'] = $time;
+            $userInfo['status'] = 2;
+            $datas[$userid] = $userInfo;
+            $datas = serialize($datas);
+            file_put_contents(static::$logFile, $datas);
+            return true;
+        } catch (BaiChuanException $e) {
+            $this->addError(__FUNCTION__, $e->getMessage(), $e->getFile(), $e->getLine());
+        }
+
+        return false;
+    }
+
     public function getAll()
     {
         try {

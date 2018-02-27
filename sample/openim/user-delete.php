@@ -19,7 +19,6 @@ if (!is_post()) {
     } catch (\Exception $e) {
         echo $e->getMessage();
     }
-//    var_dump($userinfo);exit;
 } else {
     $result = [
         'error' => 0,
@@ -29,20 +28,16 @@ if (!is_post()) {
         if (empty($_POST['userid'])) {
             throw new \Exception('数据错误');
         }
-        $return = $openIm->usersUpdate([$_POST]);
+        $userid = $_POST['userid'];
+        $return = $openIm->usersDelete($userid);
         if (!$return) {
             throw new \Exception($openIm->errors[0]['errorMsg']);
         }
-        if (empty($return['uid_succ']['string'])) {
-            foreach ($return['uid_fail']['string'] as $uid_key => $uid) {
-                throw new \Exception($return['fail_msg']['string'][$uid_key]);
-            }
-        }
-        if (!$imUser->update($_POST, $_SERVER['REQUEST_TIME'])) {
+        if (!$imUser->delete($userid, $_SERVER['REQUEST_TIME'])) {
             throw new \Exception($imUser->errors[0]['errorMsg']);
         }
         $result['error'] = 1;
-        $result['msg'] = '更新成功';
+        $result['msg'] = '删除成功';
     } catch (\Exception $e) {
         $result['msg'] = $e->getMessage();
     }
@@ -53,7 +48,7 @@ if (!is_post()) {
 
 <html>
 <head>
-    <title>用户更新</title>
+    <title>用户编辑</title>
     <?php
     require_once "common-js-style.php";
     ?>
@@ -63,7 +58,7 @@ if (!is_post()) {
 <?php
 require_once "common-link.php";
 ?>
-<p><a href="user-add.php">添加</a></p>
+<p><a href="user-add.php">用户删除</a></p>
 <div>
     <form action="" id="BaiChuanForm" name="BaiChuanForm">
         <div>
@@ -145,7 +140,7 @@ require_once "common-link.php";
                        readonly="readonly">
             </div>
         </div>
-        <button type="button" id="BaiChuanSumbit" baichuan-ajax-handler="" baichuan-ajax-redirect="">提交编辑</button>
+        <button type="button" id="BaiChuanSumbit" baichuan-ajax-handler="" baichuan-ajax-redirect="">提交删除</button>
     </form>
 </div>
 </body>
