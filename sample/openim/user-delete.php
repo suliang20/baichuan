@@ -30,11 +30,11 @@ if (!is_post()) {
         }
         $userid = $_POST['userid'];
         //  检查用户是否存在
-        if(!$imUser->hasUserid($userid)){
-           throw new \Exception('用户不存在');
+        if (!$imUser->hasUserid($userid)) {
+            throw new \Exception('用户不存在');
         }
         //  检查用户是否删除
-        if($imUser->hasUserDelete($userid)){
+        if ($imUser->hasUserDelete($userid)) {
             throw new \Exception('删除用户已删除');
         }
         $return = $openIm->usersDelete($userid);
@@ -58,13 +58,13 @@ if (!is_post()) {
 <head>
     <title>用户删除</title>
     <?php
-    require_once "common-js-style.php";
+    require_once OPEN_IM_PROJECT . "common-js-style.php";
     ?>
 </head>
 
 <body>
 <?php
-require_once "common-link.php";
+require_once OPEN_IM_PROJECT . "common-link.php";
 ?>
 <div>
     <form action="" id="BaiChuanForm" name="BaiChuanForm">

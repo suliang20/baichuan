@@ -51,13 +51,13 @@ if (!is_post()) {
 <head>
     <title>用户添加</title>
     <?php
-    require_once "common-js-style.php";
+    require_once OPEN_IM_PROJECT . "common-js-style.php";
     ?>
 </head>
 
 <body>
 <?php
-require_once "common-link.php";
+require_once OPEN_IM_PROJECT . "common-link.php";
 ?>
 <div>
     <form action="" id="BaiChuanForm" name="BaiChuanForm">

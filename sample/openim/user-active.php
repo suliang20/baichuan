@@ -30,11 +30,11 @@ if (!is_post()) {
             throw new \Exception('数据错误');
         }
         //  检查用户是否存在
-        if(!$imUser->hasUserid($_POST['userid'])){
+        if (!$imUser->hasUserid($_POST['userid'])) {
             throw new \Exception('用户不存在');
         }
         //  检查用户是否删除
-        if(!$imUser->hasUserDelete($_POST['userid'])){
+        if (!$imUser->hasUserDelete($_POST['userid'])) {
             throw new \Exception('用户未删除');
         }
         $_POST['password'] = md5($_POST['userid']);
@@ -64,13 +64,13 @@ if (!is_post()) {
 <head>
     <title>用户激活</title>
     <?php
-    require_once "common-js-style.php";
+    require_once OPEN_IM_PROJECT . "common-js-style.php";
     ?>
 </head>
 
 <body>
 <?php
-require_once "common-link.php";
+require_once OPEN_IM_PROJECT . "common-link.php";
 ?>
 <p><a href="user-add.php">添加</a></p>
 <div>

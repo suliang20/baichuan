@@ -12,6 +12,6 @@
     <title>阿里百川</title>
 </head>
 <body>
-<p><a href="./openim/index.php">百川云旺</a></p>
+<p><a href="openim/index.php">百川云旺</a></p>
 </body>
 </html>

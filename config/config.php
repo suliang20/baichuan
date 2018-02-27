@@ -9,3 +9,4 @@
 define('APPKEY', '');
 define('SECRET', '');
 define('OPEN_IM_USER_PREFIX', 'test_');
+define('BASE_URL', '/');

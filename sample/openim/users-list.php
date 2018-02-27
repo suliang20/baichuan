@@ -14,13 +14,13 @@ require_once 'common.php';
 <head>
     <title>用户列表</title>
     <?php
-    require_once "common-js-style.php";
+    require_once OPEN_IM_PROJECT . "common-js-style.php";
     ?>
 </head>
 
 <body>
 <?php
-require_once "common-link.php";
+require_once OPEN_IM_PROJECT . "common-link.php";
 ?>
 <p><a href="user-add.php">添加</a></p>
 <div>
