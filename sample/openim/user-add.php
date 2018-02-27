@@ -11,15 +11,10 @@ require_once 'common.php';
 $imUser = new \baichuan\business\ImUser();
 if (!is_post()) {
     try {
-        if (empty($_GET['userid'])) {
-            throw new \Exception('用户ID不存在');
-        }
-        $userid = $_GET['userid'];
-        $userinfo = $imUser->getUserInfoByUserid($userid);
+        $userid = OPEN_IM_USER_PREFIX . $imUser->getNewUserId();
     } catch (\Exception $e) {
         echo $e->getMessage();
     }
-//    var_dump($userinfo);exit;
 } else {
     $result = [
         'error' => 0,
@@ -29,7 +24,8 @@ if (!is_post()) {
         if (empty($_POST['userid'])) {
             throw new \Exception('数据错误');
         }
-        $return = $openIm->usersUpdate([$_POST]);
+        $_POST['password'] = md5($_POST['userid']);
+        $return = $openIm->usersAdd([$_POST]);
         if (!$return) {
             throw new \Exception($openIm->errors[0]['errorMsg']);
         }
@@ -38,7 +34,7 @@ if (!is_post()) {
                 throw new \Exception($return['fail_msg']['string'][$uid_key]);
             }
         }
-        if (!$imUser->update($_POST, $_SERVER['REQUEST_TIME'])) {
+        if (!$imUser->add($_POST, $_SERVER['REQUEST_TIME'])) {
             throw new \Exception($imUser->errors[0]['errorMsg']);
         }
         $result['error'] = 1;
@@ -53,7 +49,7 @@ if (!is_post()) {
 
 <html>
 <head>
-    <title>用户编辑</title>
+    <title>用户添加</title>
     <?php
     require_once "common-js-style.php";
     ?>
@@ -63,89 +59,82 @@ if (!is_post()) {
 <?php
 require_once "common-link.php";
 ?>
-<p><a href="user-add.php">添加</a></p>
 <div>
     <form action="" id="BaiChuanForm" name="BaiChuanForm">
         <div>
             <div>
-                <label for="userid">用户ID:</label>
-                <input type="text" id="userid" name="userid" value="<?= $userinfo['userid'] ?>" readonly="readonly">
+                <input type="hidden" id="userid" name="userid" value="<?= $userid ?>"
+                       readonly="readonly">
             </div>
+
             <div>
                 <label for="nick">昵称:</label>
-                <input type="text" id="nick" name="nick" value="<?= $userinfo['nick'] ?>">
+                <input type="text" id="nick" name="nick">
             </div>
             <div>
                 <label for="icon_url">头像url:</label>
-                <input type="text" id="icon_url" name="icon_url" value="<?= $userinfo['icon_url'] ?>">
+                <input type="text" id="icon_url" name="icon_url">
             </div>
             <div>
                 <label for="email">email地址:</label>
-                <input type="text" id="email" name="email" value="<?= $userinfo['email'] ?>">
+                <input type="text" id="email" name="email">
             </div>
             <div>
                 <label for="mobile">手机号码:</label>
-                <input type="text" id="mobile" name="mobile" value="<?= $userinfo['mobile'] ?>">
+                <input type="text" id="mobile" name="mobile">
             </div>
             <div>
                 <label for="taobaoid">淘宝账号:</label>
-                <input type="text" id="taobaoid" name="taobaoid" value="<?= $userinfo['taobaoid'] ?>">
+                <input type="text" id="taobaoid" name="taobaoid">
             </div>
             <div>
                 <label for="remark">remark:</label>
-                <input type="text" id="remark" name="remark" value="<?= $userinfo['remark'] ?>">
+                <input type="text" id="remark" name="remark">
             </div>
             <div>
                 <label for="extra">扩展字段:</label>
-                <input type="text" id="extra" name="extra" value="<?= $userinfo['extra'] ?>">
+                <input type="text" id="extra" name="extra">
             </div>
             <div>
                 <label for="career">职位:</label>
-                <input type="text" id="career" name="career" value="<?= $userinfo['career'] ?>">
+                <input type="text" id="career" name="career">
             </div>
             <div>
                 <label for="vip">vip:</label>
-                <input type="text" id="vip" name="vip" value="<?= $userinfo['vip'] ?>">
+                <input type="text" id="vip" name="vip">
             </div>
             <div>
                 <label for="address">地址:</label>
-                <input type="text" id="address" name="address" value="<?= $userinfo['address'] ?>">
+                <input type="text" id="address" name="address">
             </div>
             <div>
                 <label for="name">名字:</label>
-                <input type="text" id="name" name="name" value="<?= $userinfo['name'] ?>">
+                <input type="text" id="name" name="name">
             </div>
             <div>
                 <label for="age">年龄:</label>
-                <input type="text" id="age" name="age" value="<?= $userinfo['age'] ?>">
+                <input type="text" id="age" name="age">
             </div>
             <div>
                 <label for="gender">性别:</label>
-                <input type="text" id="gender" name="gender" value="<?= $userinfo['gender'] ?>">
+                <input type="text" id="gender" name="gender">
             </div>
             <div>
                 <label for="wechat">微信:</label>
-                <input type="text" id="wechat" name="wechat" value="<?= $userinfo['wechat'] ?>">
+                <input type="text" id="wechat" name="wechat">
             </div>
             <div>
                 <label for="qq">qq:</label>
-                <input type="text" id="qq" name="qq" value="<?= $userinfo['qq'] ?>">
+                <input type="text" id="qq" name="qq">
             </div>
             <div>
                 <label for="weibo">微博:</label>
-                <input type="text" id="weibo" name="weibo" value="<?= $userinfo['weibo'] ?>">
-            </div>
-            <div>
-                <label for="status">状态:</label>
-                <input type="text" id="status" name="status" value="<?= $userinfo['status'] ?>" readonly="readonly">
-            </div>
-            <div>
-                <label for="createTime">创建时间:</label>
-                <input type="text" id="createTime" name="createTime" value="<?= $userinfo['createTime'] ?>"
-                       readonly="readonly">
+                <input type="text" id="weibo" name="weibo">
             </div>
         </div>
-        <button type="button" id="BaiChuanSumbit" baichuan-ajax-handler="">提交编辑</button>
+        <button type="button" id="BaiChuanSumbit" baichuan-ajax-handler=""
+                baichuan-ajax-redirect="user-update.php?userid=<?= $userid ?>">提交编辑
+        </button>
     </form>
 </div>
 </body>

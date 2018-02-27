@@ -7,6 +7,7 @@ $(document).ready(function () {
         }
         var data = $("#BaiChuanForm").serialize();
         var handler = $(this).attr('baichuan-ajax-handler')
+        var redirect = $(this).attr('baichuan-ajax-redirect')
         $.ajax({
             cache: true,
             type: "POST",
@@ -24,6 +25,9 @@ $(document).ready(function () {
                     alert(data.msg);
                 } else if (data.error == 1) {
                     alert(data.msg);
+                    if (redirect) {
+                        window.location = redirect;
+                    }
                     // location.reload();
                 } else {
                     alert('数据异常');

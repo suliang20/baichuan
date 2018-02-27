@@ -8,37 +8,6 @@
 
 require_once 'common.php';
 
-
-//try {
-//    $imUser = new \baichuan\business\ImUser();
-//
-//    $userInfoArrs = [];
-//    for ($i = 1; $i <= 1; $i++) {
-//        $newUserId = $imUser->getNewUserId();
-//        $userId = OPEN_IM_USER_PREFIX . $newUserId;
-//        $userInfoArrs[$userId] = [
-//            'userid' => $userId,
-//            'password' => Md5($userId)
-//        ];
-//    }
-//    $return = $openIm->usersAdd($userInfoArrs);
-//    if (!$return) {
-//        var_dump($openIm->errors);
-//        var_dump($openIm->responseErrors);
-//    } else {
-//        if (!empty($return['uid_succ']['string'])) {
-//            foreach ($return['uid_succ']['string'] as $uid) {
-//                if (!$imUser->add($userInfoArrs[$uid], $_SERVER['REQUEST_TIME'])) {
-//                    throw new \Exception($imUser->errors[0]['errorMsg']);
-//                }
-//            }
-//        }
-//    }
-//} catch (\Exception $e) {
-//    echo $e->getMessage();
-//}
-//exit;
-//var_dump((new \baichuan\business\ImUser())->getAll());exit;
 ?>
 
 <html>
@@ -53,7 +22,7 @@ require_once 'common.php';
 <?php
 require_once "common-link.php";
 ?>
-<p><a href="register.php">注册</a></p>
+<p><a href="user-add.php">添加</a></p>
 <div>
     <table border="2">
         <tr>
@@ -110,7 +79,7 @@ require_once "common-link.php";
 
 
                     <td>
-                        <a href="user-update.php?userid=<?= $item['userid'] ?>">编辑</a>
+                        <a href="user-update.php?userid=<?= $item['userid'] ?>">更新</a>
                     </td>
                 </tr>
             <?php endif; ?>
