@@ -65,7 +65,7 @@ try {
     }
     $endTime = strtotime($_POST['endTime']);
     //  查询聊天记录
-    $return = $openIm->ChatlogsGet($begTime, $endTime, $userInfo1, $userInfo2, $nextKey,2);
+    $return = $openIm->ChatlogsGet($begTime, $endTime, $userInfo1, $userInfo2, $nextKey,20);
     if (!$return) {
         throw new \Exception($openIm->errors[0]['errorMsg']);
     }
