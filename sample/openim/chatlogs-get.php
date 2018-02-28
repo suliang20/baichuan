@@ -77,9 +77,10 @@ require_once OPEN_IM_PROJECT . "common-link.php";
         <label for="endTime">查询结束时间:</label>
         <input type="text" id="endTime" name="endTime">
 
-        <button type="button" class="BaiChuanSumbit" baichuan-ajax-handler="viewData"
+        <button type="button" class="BaiChuanSumbit" baichuan-ajax-back-handler="viewData"
                 baichuan-ajax-redirect="">获取聊天记录
         </button>
+        <button type="button" class="BaiChuanSumbit" id="moreBtn" baichuan-ajax-back-handler="viewMoreData" baichuan-ajax-redirect="" style="display:none;">更多</button>
     </form>
 </div>
 <div>
@@ -94,7 +95,6 @@ require_once OPEN_IM_PROJECT . "common-link.php";
             <th>操作</th>
         </tr>
     </table>
-    <button type="button" class="BaiChuanSumbit" id="moreBtn" baichuan-ajax-handler="viewMoreData" baichuan-ajax-redirect="" style="display:none;">更多</button>
 </div>
 <script type="text/javascript">
     //  显示数据
