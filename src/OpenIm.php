@@ -587,6 +587,54 @@ class OpenIm extends \baichuan\data\Data
         }
     }
 
+    /**
+     * openim应用聊天记录查询
+     * @param $beginTime
+     * @param $endTime
+     * @param null $next_key
+     * @param int $count
+     * @return bool|mixed
+     */
+    public function AppChatlogsGet($beginTime, $endTime, $next_key = null, $count = 100)
+    {
+        try {
+            $topClient = $this->getTopClient($this->format);
+
+            $req = new \OpenimAppChatlogsGetRequest();
+            //  查询开始时间
+            if (empty($beginTime)) {
+                throw new BaiChuanException('查询开始时间不能为空');
+            }
+            $req->setBeg((string)$beginTime);
+            //  查询结束时间
+            if (empty($endTime)) {
+                throw new BaiChuanException('查询结束时间不能为空');
+            }
+            $req->setEnd((string)$endTime);
+            //  查询条数
+            $req->setCount((string)$count);
+            //  迭代key
+            if (!empty($next_key)) {
+                $req->setNext($next_key);
+            }
+
+            $resp = $topClient->execute($req);
+            $return = $this->toArray($resp, $this->format);
+            if (!$return) {
+                throw new BaiChuanException($this->errors[0]['errorMsg']);
+            }
+            if (!empty($return['code'])) {
+                $this->ResponseError($return);
+                throw new BaiChuanException($return['msg']);
+            }
+            return $return;
+        } catch
+        (BaiChuanException $e) {
+            $this->addError(__FUNCTION__, $e->getMessage(), $e->getLine(), $e->getFile());
+            return false;
+        }
+    }
+
     public function test()
     {
         echo 'test', PHP_EOL;

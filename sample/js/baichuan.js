@@ -15,21 +15,29 @@ $(document).ready(function () {
 })
 $(document).ready(function () {
     $(".BaiChuanSumbit").click(function () {
+        var backHandler = $(this).attr('baichuan-ajax-back-handler')
+        var frontHandler = $(this).attr('baichuan-ajax-front-handler')
+        var redirect = $(this).attr('baichuan-ajax-redirect')
+
+        //如果有自定义的处理函数，则用处理函数
+        if (frontHandler) {
+            frontHandler = frontHandler + '(this);'
+            eval(frontHandler);
+        }
+
         var action = $(".BaiChuanForm").attr('action');
         if (!action) {
             action = window.location.href;
         }
         var data = $(".BaiChuanForm").serialize();
-        var handler = $(this).attr('baichuan-ajax-handler')
-        var redirect = $(this).attr('baichuan-ajax-redirect')
 
-        baichuanAjaxJson(action, data, handler, redirect, 'POST');
+        baichuanAjaxJson(action, data, backHandler, redirect, 'POST');
         return false;
     });
 })
 
 //  ajax获取json数据
-function baichuanAjaxJson(action, submitData, handler, redirect, submitType) {
+function baichuanAjaxJson(action, submitData, backHandler, redirect, submitType) {
     if (!submitType) {
         submitType = "POST";
     }
@@ -43,8 +51,8 @@ function baichuanAjaxJson(action, submitData, handler, redirect, submitType) {
         dataType: 'json',
         success: function (data) {
             //如果有自定义的处理函数，则用处理函数
-            if (handler) {
-                eval(handler + '(data);');
+            if (backHandler) {
+                eval(backHandler + '(data);');
                 return;
             }
             if (data.error == 0) {
@@ -101,3 +109,18 @@ function submitForm(action, data) {
     document.body.removeChild(form);
 }
 
+/**
+ * 时间转化
+ * @param date
+ * @returns {string}
+ */
+function timetrans(date) {
+    var date = new Date(date * 1000);//如果date为13位不需要乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+    var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+    return Y + M + D + h + m + s;
+}
