@@ -77,11 +77,15 @@ if (!is_post()) {
     require_once OPEN_IM_PROJECT . "common-js-style.php";
     ?>
     <script type="text/javascript">
+        var currentDate = new Date();
+        var lastMonthDate = new Date();
+        lastMonthDate.setDate(lastMonthDate.getDate() - 30);
         laydate.render({
             elem: "#begDate",
             format: "yyyyMMdd",
             min: -30,
             max: 0,
+            value: lastMonthDate,
             btns: ["confirm"],
         });
         laydate.render({
@@ -89,6 +93,7 @@ if (!is_post()) {
             format: "yyyyMMdd",
             min: -30,
             max: 0,
+            value: currentDate,
             btns: ["confirm"],
         });
     </script>
@@ -123,22 +128,39 @@ require_once OPEN_IM_PROJECT . "common-link.php";
     </table>
 </div>
 <script type="text/javascript">
+    //  获取聊天对象数据
     function viewData(data) {
+        $("#relation tr:not(:first)").html("");
         if (!isEmpty(data.data)) {
             var relation = data.data;
-            $("#relation tr:not(:first)").html("");
             for (var key in relation) {
                 var tr =
                     "<tr>" +
-                    "<td>" + relation[key]['uid'] + "</td>" +
-                    "<td>" + relation[key]['app_key'] + "</td>" +
-                    "<td>" + relation[key]['taobao_account'] + "</td>" +
+                    "<td class='uid'>" + relation[key]['uid'] + "</td>" +
+                    "<td class='app_key'>" + relation[key]['app_key'] + "</td>" +
+                    "<td class='taobao_account'>" + relation[key]['taobao_account'] + "</td>" +
+                    "<td><a href='javascript:;' onclick='viewChatlogs(this)'>查看聊天记录</a> </td>" +
                     "</tr>";
                 $("#relation").append(tr);
-                console.log(relation[key]);
+//                console.log(relation[key]);
             }
         }
     }
+
+    //  获取聊天数据
+    function viewChatlogs(t) {
+        var parentTr = $(t).parent().parent();
+        var action = '<?=BASE_URL?>openim/chatlogs-get.php?userid=<?=$userid?>';
+        var userinfo = {
+            'to_uid': parentTr.children('.uid').html(),
+            'to_app_key': parentTr.children('.app_key').html(),
+            'to_taobao_account': parentTr.children('.taobao_account').html(),
+        };
+
+        //  模拟表单提交
+        submitForm(action, userinfo);
+    }
+
 </script>
 </body>
 </html>

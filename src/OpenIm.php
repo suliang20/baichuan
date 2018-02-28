@@ -463,7 +463,7 @@ class OpenIm extends \baichuan\data\Data
                 throw new  BaiChuanException('查询起始日期错误');
             }
             $begTime = strtotime($begDate);
-            if ($newTime - $begTime >= 3600 * 24 * 30) {
+            if (($newTime - $begTime) > 3600 * 24 * 30) {
                 throw new BaiChuanException('查询起始日期不能大于一个月');
             }
             $req->setBegDate($begDate);
@@ -472,7 +472,7 @@ class OpenIm extends \baichuan\data\Data
                 throw new  BaiChuanException('查询结束日期错误');
             }
             $endTime = strtotime($endDate);
-            if ($newTime - $endTime >= 3600 * 24 * 30) {
+            if (($newTime - $endTime) > 3600 * 24 * 30) {
                 throw new BaiChuanException('查询结束日期不能大于一个月');
             }
             if ($endTime < $begTime) {
@@ -487,10 +487,88 @@ class OpenIm extends \baichuan\data\Data
             $user->uid = $userInfo['uid'];
 
             $user->taobao_account = !empty($userInfo['taobao_account']) && $userInfo['taobao_account'] == true ? 'true' : "false";
-            if(!empty($userInfo['app_key'])){
+            if (!empty($userInfo['app_key'])) {
                 $user->app_key = $userInfo['app_key'];
             }
             $req->setUser(json_encode($user));
+
+            $resp = $topClient->execute($req);
+            $return = $this->toArray($resp, $this->format);
+            if (!$return) {
+                throw new BaiChuanException($this->errors[0]['errorMsg']);
+            }
+            if (!empty($return['code'])) {
+                $this->ResponseError($return);
+                throw new BaiChuanException($return['msg']);
+            }
+            return $return;
+        } catch
+        (BaiChuanException $e) {
+            $this->addError(__FUNCTION__, $e->getMessage(), $e->getLine(), $e->getFile());
+            return false;
+        }
+    }
+
+    /**
+     * openim聊天记录查询接口
+     * @param $beginTime
+     * @param $endTime
+     * @param $userInfo1
+     * @param $userInfo2
+     * @param int $count
+     * @param null $next_key
+     * @return bool|mixed
+     */
+    public function ChatlogsGet($beginTime, $endTime, $userInfo1, $userInfo2, $next_key = null, $count = 100)
+    {
+        try {
+            $topClient = $this->getTopClient($this->format);
+
+            $req = new \OpenimChatlogsGetRequest();
+            //  用户1数据
+            $user1 = new \OpenImUser();
+            if (empty($userInfo1) || !is_array($userInfo2)) {
+                throw new BaiChuanException('用户1数据异常');
+            }
+            if (empty($userInfo1['uid'])) {
+                throw new BaiChuanException('用户1userid不存在');
+            }
+            $user1->uid = $userInfo1['uid'];
+            $user1->taobao_account = !empty($userInfo1['taobao_account']) ? $userInfo1['taobao_account'] : "false";
+            if (!empty($userInfo1['app_key'])) {
+                $user1->app_key = $userInfo1['app_key'];
+            }
+            $req->setUser1(json_encode($user1));
+            //  用户2数据
+            $user2 = new \OpenImUser();
+            if (empty($userInfo2) || !is_array($userInfo2)) {
+                throw new BaiChuanException('用户2数据异常');
+            }
+            if (empty($userInfo2['uid'])) {
+                throw new BaiChuanException('用户2userid不存在');
+            }
+            $user2->uid = $userInfo2['uid'];
+            $user2->taobao_account = !empty($userInfo2['taobao_account']) ? $userInfo2['taobao_account'] : "false";
+            if (!empty($userInfo2['app_key'])) {
+                $user2->app_key = $userInfo2['app_key'];
+            }
+            $req->setUser2(json_encode($user2));
+            //  查询开始时间
+            if (empty($beginTime)) {
+                throw new BaiChuanException('查询开始时间不能为空');
+            }
+            $req->setBegin((string)$beginTime);
+            //  查询结束时间
+            if (empty($endTime)) {
+                throw new BaiChuanException('查询结束时间不能为空');
+            }
+            $req->setEnd((string)$endTime);
+            //  查询条数
+            $req->setCount((string)$count);
+            //  迭代key
+            if (!empty($next_key)) {
+                $req->setNextKey($next_key);
+            }
 
             $resp = $topClient->execute($req);
             $return = $this->toArray($resp, $this->format);
