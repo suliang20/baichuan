@@ -8,9 +8,9 @@
       "email": "suliang20@163.com"
     }
   ],
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "require": {
-    "suliang/top-sdk": "@dev"
+    "suliang/top-sdk": ">=v1.0"
   },
   "autoload": {
     "psr-4": {
