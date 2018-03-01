@@ -8,7 +8,6 @@
 
 namespace baichuan;
 
-include "taobao/TopSdk.php";
 
 class OpenIm extends \baichuan\data\Data
 {

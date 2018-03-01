@@ -9,7 +9,9 @@
     }
   ],
   "minimum-stability": "dev",
-  "require": {},
+  "require": {
+    "suliang/top-sdk": "dev-master"
+  },
   "autoload": {
     "psr-4": {
       "baichuan\\": "src/"
