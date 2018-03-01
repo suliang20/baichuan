@@ -10,7 +10,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "suliang/top-sdk": "dev-master"
+    "suliang/top-sdk": "@dev"
   },
   "autoload": {
     "psr-4": {
